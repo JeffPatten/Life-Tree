@@ -3,6 +3,8 @@ const massive = require('massive');
 const bodyParser = require('body-parser');
 const axios = require('axios');
 const session = require('express-session');
+const controller = require('./controller');
+const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -14,7 +16,9 @@ const {
     REACT_APP_CLIENT_ID,
     CLIENT_SECRET,
     CONNECTION_STRING,
-    SECRET
+    SECRET,
+    EMAIL_USER,
+    EMAIL_PASSWORD
 } = process.env;
 
 massive(CONNECTION_STRING).then(db => {
@@ -26,10 +30,48 @@ app.use(session({
     secret: SECRET,
     resave: false,
     saveUninitialized: false
-}))
+}));
+
+// const transporter = nodemailer.createTransport({
+//     service: 'gmail',
+//     auth: {
+//         user: EMAIL_USER,
+//         pass: EMAIL_PASSWORD
+//     }
+// });
+
+// const mailOptions = {
+//     from: 'treelifebalance@gmail.com',
+//     to: ,
+//     subject: ,
+//     text:
+// }
+
+
+
+// This allows you to bypass the login each time while in development
+let authBypass = async (req, res, next) => {
+    console.log(process.env.NODE_ENV)
+    if (process.env.NODE_ENV) {
+        const db = req.app.get('db');
+        let user = await db.session_user(1);
+        console.log(user)
+        req.session.user = user[0];
+        next();
+    } else {
+        next()
+    }
+}
+app.use(authBypass);
+
+
+app.get('/goals/:category', controller.getGoals);
+// app.post('/goals/subcategory', controller.postSubcategory);
+// axios.post('/goals/new/:category', controller.postGoal);
+
 
 app.get('/auth/callback', async (req, res) => {
-    //get code from req.query.code
+    //auth0 sending code in req.query.code
     let payload = {
         client_id: REACT_APP_CLIENT_ID,
         client_secret: CLIENT_SECRET,
@@ -37,12 +79,13 @@ app.get('/auth/callback', async (req, res) => {
         grant_type: 'authorization_code',
         redirect_uri: `http://${req.headers.host}/auth/callback`
     }
-    // post request with code for token
-    let tokenRes = await axios.post(`https://${REACT_APP_DOMAIN}/oauth/token`, payload);
+    //exchange code for token. token is on resWithToken.data.access_token
+    let resWithToken = await axios.post(`https://${REACT_APP_DOMAIN}/oauth/token`, payload);
 
-    // use token to get user data
-    let userRes = await axios.get(`https://${REACT_APP_DOMAIN}/userinfo?access_token=${tokenRes.data.access_token}`)
-    let { email, picture, sub, name } = userRes.data;
+    // exchange token for user data
+    let resWithData = await axios.get(`https://${REACT_APP_DOMAIN}/userinfo?access_token=${resWithToken.data.access_token}`)
+    console.log(resWithData);
+    let { email, sub, name, phone } = resWithData.data;
     //check if that user already exists in our db
     const db = app.get('db');
     let foundCustomer = await db.find_customer([sub]);
@@ -53,12 +96,23 @@ app.get('/auth/callback', async (req, res) => {
         req.session.user = foundCustomer[0];
     } else {
         // no user was found by that google id. create new user in db
-        let createdCust = await db.create_customer([name, sub, picture, email])
+        let createdCust = await db.create_customer([name, sub, email, phone])
         req.session.user = createdCust[0];
     }
     res.redirect('/#/home') 
 })
 
+app.get('/api/user-data', authBypass, (req, res) => {
+    if (req.session.user) {
+        res.status(200).send(req.session.user)
+    } else {
+        res.status(401).send('Please log in');
+    }
+})
 
+app.get('/auth/logout', (req, res) => {
+    req.session.destroy();
+    res.redirect('http://localhost:3000/#/')
+})
 
 app.listen(SERVER_PORT, () => console.log(`Listening on port: ${SERVER_PORT}`))

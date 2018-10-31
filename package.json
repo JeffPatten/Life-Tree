@@ -10,11 +10,15 @@
     "express-session": "^1.15.6",
     "http-proxy-middleware": "^0.19.0",
     "massive": "^5.5.1",
+    "nodemailer": "^4.6.8",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
+    "react-fontawesome": "^1.6.1",
+    "react-onclickoutside": "^6.7.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.0.5",
+    "reactjs-dropdown-component": "^1.0.5",
     "redux": "^4.0.1"
   },
   "scripts": {
