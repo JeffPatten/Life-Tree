@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const app = express();
 app.use(bodyParser.json());
+app.use( express.static( `${__dirname}/../build` ) );
 
 const {
     SERVER_PORT,
@@ -17,8 +18,10 @@ const {
     CLIENT_SECRET,
     CONNECTION_STRING,
     SECRET,
-    EMAIL_USER,
-    EMAIL_PASSWORD
+    REDIRECT_URL,
+    AUTH_PROTOCOL,
+    // EMAIL_USER,
+    // EMAIL_PASSWORD
 } = process.env;
 
 massive(CONNECTION_STRING).then(db => {
@@ -64,9 +67,9 @@ let authBypass = async (req, res, next) => {
 }
 app.use(authBypass);
 
-
 app.get('/goals/:category', controller.getGoals);
-// app.post('/goals/subcategory', controller.postSubcategory);
+app.get('/goals/subcategory/:category', controller.getSubcategory);
+app.post('/goals', controller.postGoal);
 // axios.post('/goals/new/:category', controller.postGoal);
 
 
@@ -77,7 +80,7 @@ app.get('/auth/callback', async (req, res) => {
         client_secret: CLIENT_SECRET,
         code: req.query.code,
         grant_type: 'authorization_code',
-        redirect_uri: `http://${req.headers.host}/auth/callback`
+        redirect_uri: `${AUTH_PROTOCOL}://${req.headers.host}/auth/callback`
     }
     //exchange code for token. token is on resWithToken.data.access_token
     let resWithToken = await axios.post(`https://${REACT_APP_DOMAIN}/oauth/token`, payload);
@@ -112,7 +115,7 @@ app.get('/api/user-data', authBypass, (req, res) => {
 
 app.get('/auth/logout', (req, res) => {
     req.session.destroy();
-    res.redirect('http://localhost:3000/#/')
+    res.redirect(`${REDIRECT_URL}`)
 })
 
 app.listen(SERVER_PORT, () => console.log(`Listening on port: ${SERVER_PORT}`))

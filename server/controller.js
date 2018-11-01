@@ -21,19 +21,44 @@ module.exports = {
         }
     },
 
-    postSubcategory: (req, res, next) => {
+    getSubcategory: (req, res, next) => {
         const db = req.app.get('db');
         const {category} = req.params;
         const {id} = req.session.user;
-        const {subcategory} = req.body;
 
-        db.post_subcategory({subcategory, category, id})
-        .then(() => res.status(200))
+        db.get_subcategories([category, id])
+        .then(subcategories => res.status(200).send(subcategories))
         .catch(err => {
-            res.status(500).send({errorMessage: 'Subcategory not added'});
+            res.status(500).send({errorMessage: 'error'});
             console.log(err);
         })
     },
+
+    postGoal: async (req, res, next) => {
+        const db = req.app.get('db');
+        const { subcategory, categoryId, goal } = req.body;
+        const { id } = res.session.user;
+
+        let subcat = await db.post_subcategory([subcategory, categoryId, id])
+        await db.post_goal([goal, id, subcat[0].id, categoryId])
+        return res.sendStatus(200)
+        
+    } 
+}
+
+    // postSubcategory: (req, res, next) => {
+    //     const db = req.app.get('db');
+    //     const {category} = req.params;
+    //     const {id} = req.session.user;
+    //     const {subcategory} = req.body;
+
+    //     db.post_subcategory({subcategory, category, id})
+    //     .then(() => res.status(200))
+    //     .catch(err => {
+    //         res.status(500).send({errorMessage: 'Subcategory not added'});
+    //         console.log(err);
+    //     })
+    // },
 
     // postGoal: (req, res, next) => {
     //     const db = req.app.get('db');
@@ -48,4 +73,4 @@ module.exports = {
     //         console.log(err);
     //     })
     // }
-}
+// }

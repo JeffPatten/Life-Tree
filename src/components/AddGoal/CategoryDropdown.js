@@ -12,18 +12,19 @@ class CategoryDropdown extends Component {
         }
     }
 
+    
+
     handleClickOutside() {
         this.setState({
             listOpen: false
         })
     }
 
-    selectItem = (title, id, stateKey) => {
-        this.setState({
-          headerTitle: title,
-          listOpen: false
-        }, this.props.resetThenSet(id, stateKey))
-      }
+    selectItem = (title, id, stateKey) => { 
+        this.setState ({ 
+            headerTitle: title,
+            listOpen: false
+        }, this.props.resetThenSet(id, stateKey)) }
 
     toggleList = () => {
         this.setState(prevState => ({
