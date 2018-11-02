@@ -34,15 +34,18 @@ module.exports = {
         })
     },
 
-    postGoal: async (req, res, next) => {
+    postGoal: (req, res, next) => {
         const db = req.app.get('db');
-        const { subcategory, categoryId, goal } = req.body;
-        const { id } = res.session.user;
+        const { goal, subcategory_id, category_id } = req.body;
+        const { id } = req.session.user;
 
-        let subcat = await db.post_subcategory([subcategory, categoryId, id])
-        await db.post_goal([goal, id, subcat[0].id, categoryId])
-        return res.sendStatus(200)
-        
+        // let subcat = await db.post_subcategory([subcategory, categoryId, id])
+        db.post_goal([goal, id, subcategory_id, category_id])
+        .then(() => res.sendStatus(200))
+        .catch(err => {
+            res.status(500).send({errorMessage: 'error'});
+            console.log(err)
+        })
     },
     
     deleteGoal: async (req, res, next) => {

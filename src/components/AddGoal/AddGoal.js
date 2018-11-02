@@ -62,7 +62,17 @@ export default class AddSubcategory extends Component {
                 )
                 this.setState({ subcategory: newSubCat });
             })
-    };
+    }
+
+    handlePost = () => {
+        var {goal, subcategory_id, category_id} = this.state;
+        axios.post('/goals', {goal, subcategory_id, category_id})
+        .then( () => {
+            alert('Goal Added');
+            this.setState({goal: ''});
+            this.props.history.push('/home');
+        })
+    }
 
     render() {
 
@@ -74,7 +84,7 @@ export default class AddSubcategory extends Component {
                     <SubcategoryDropdown category='Select Subcategory' list={this.state.subcategory} resetThenSet={this.resetThenSet} />
                     <textarea placeholder='Add goal - Limit 200 characters' value={this.state.goal} ref='goalInput' className='goalInput'
                         onChange={(e) => this.setState({ goal: e.target.value })} cols={55} rows={10} maxLength={200}/>
-                    <button>Submit</button>
+                    <button onClick={this.handlePost}>Submit</button>
                 </div>
             </div >
         );
