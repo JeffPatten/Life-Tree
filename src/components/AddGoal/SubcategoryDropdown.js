@@ -8,7 +8,7 @@ class SubcategoryDropdown extends Component {
         super(props);
         this.state = {
             listOpen: false,
-            headerTitle: this.props.title
+            headerTitle: this.props.category
         }
     }
 
@@ -18,11 +18,12 @@ class SubcategoryDropdown extends Component {
         })
     }
 
-    selectItem = (title, id, stateKey) => {
+    selectItem = (item) => {
+        let {subcategory_name} = item;
         this.setState({
-          headerTitle: title,
+          headerTitle: subcategory_name,
           listOpen: false
-        }, this.props.resetThenSet(id, stateKey))
+        }, this.props.resetThenSet(item))
       }
 
     toggleList = () => {
@@ -45,7 +46,7 @@ class SubcategoryDropdown extends Component {
                 </div>
                 {listOpen && <ul className="dd-list">
                     {list.map((item) => (
-                        <li className="dd-list-item" key={item.title} onClick={() => this.selectItem(item.title, item.id, item.key)}> {item.title} {item.selected && <FontAwesome name="check" />}</li>
+                        <li className="dd-list-item" key={item.subcategory} onClick={() => this.selectItem(item)}> {item.subcategory_name} {item.selected && <FontAwesome name="check" />}</li>
                     ))}
                 </ul>}
             </div>

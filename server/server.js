@@ -70,7 +70,14 @@ app.use(authBypass);
 app.get('/goals/:category', controller.getGoals);
 app.get('/goals/subcategory/:category', controller.getSubcategory);
 app.post('/goals', controller.postGoal);
-// axios.post('/goals/new/:category', controller.postGoal);
+app.delete('/goals/:goalId', controller.deleteGoal);
+
+// (req, res) => {
+//     const {index} = req.params
+//     favoriteQuotes.splice(index, 1)
+//     res.status(200).send(favoriteQuotes)
+// }
+
 
 
 app.get('/auth/callback', async (req, res) => {

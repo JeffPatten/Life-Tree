@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Nav from '../Nav/Nav';
 import GoalsDisplay from '../GoalsDisplay/GoalsDisplay';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 // import {connect} from 'react-redux';
 // import AddGoal from '../AddGoal/AddGoal';
 import axios from 'axios';
@@ -17,6 +17,7 @@ export default class Goals extends Component {
     componentDidMount() {
         this.getGoals()
     }
+
     componentDidUpdate(prevProps) {
         if (prevProps !== this.props) {
             this.getGoals()
@@ -26,9 +27,16 @@ export default class Goals extends Component {
     getGoals = () => {
         axios.get(`/goals/${this.props.match.params.category}`)
             .then((res) => {
-                console.log(res.data[0].goals)
+                // console.log('GOALS DATA:', res.data[0].goals)
                 this.setState({ goals: res.data[0].goals });
             })
+    }
+
+    //I need to go over the array of objects at the index and pull out the goal id. then I can pass that into the controller to delete the goal with the matching id.
+
+    handleDelete = (goalId) => {
+        axios.delete(`/goals/${goalId}`)
+            .then( () => this.getGoals() )
     }
 
     renderGoals = () => {
@@ -48,8 +56,9 @@ export default class Goals extends Component {
                         this.state.goals.filter(goals => {
                             return goals.subcategory_name === subcategory
                         }).map(goal => {
+                            // console.log('LOOK HERE:', goal)
                             return (
-                                <GoalsDisplay goal={goal.goal} />
+                                <GoalsDisplay goal={goal.goal} goalId={goal.id} handleDelete={this.handleDelete} />
                             )
                         })
                     }
@@ -58,6 +67,7 @@ export default class Goals extends Component {
         })
         return subCatGoal;
     }
+
 
     render() {
         console.log(this.props.match.params.category);

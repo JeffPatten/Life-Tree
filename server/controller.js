@@ -43,7 +43,16 @@ module.exports = {
         await db.post_goal([goal, id, subcat[0].id, categoryId])
         return res.sendStatus(200)
         
-    } 
+    },
+    
+    deleteGoal: async (req, res, next) => {
+        const db = req.app.get('db');
+        const {goalId} = req.params;
+        
+
+        await db.delete_goal([goalId])
+        return res.sendStatus(200)
+    }
 }
 
     // postSubcategory: (req, res, next) => {

@@ -8,11 +8,9 @@ class CategoryDropdown extends Component {
         super(props);
         this.state = {
             listOpen: false,
-            headerTitle: this.props.title
+            headerTitle: this.props.category
         }
     }
-
-    
 
     handleClickOutside() {
         this.setState({
@@ -20,11 +18,13 @@ class CategoryDropdown extends Component {
         })
     }
 
-    selectItem = (title, id, stateKey) => { 
-        this.setState ({ 
-            headerTitle: title,
+    selectItem = (item) => {
+        let {category} = item
+        this.setState({
+            headerTitle: category,
             listOpen: false
-        }, this.props.resetThenSet(id, stateKey)) }
+        }, this.props.resetThenSet(item))
+    }
 
     toggleList = () => {
         this.setState(prevState => ({
@@ -46,7 +46,7 @@ class CategoryDropdown extends Component {
                 </div>
                 {listOpen && <ul className="dd-list">
                     {list.map((item) => (
-                        <li className="dd-list-item" key={item.title} onClick={() => this.selectItem(item.title, item.id, item.key)}> {item.title} {item.selected && <FontAwesome name="check" />}</li>
+                        <li className="dd-list-item" key={item.category} onClick={() => this.selectItem(item)}> {item.category} {item.selected && <FontAwesome name="check" />}</li>
                     ))}
                 </ul>}
             </div>
