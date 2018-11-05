@@ -9,11 +9,11 @@ export default function Home() {
         <div className='home'>
             <div>
                 <Nav />
-                {/* <Link to='goals/Emotional'><div className='button dark-color'>Emotional</div></Link>
-                <Link to='goals/Intellectual'><div className='button dark-color'>Intellectual</div></Link>
-                <Link to='goals/Physical'><div className='button dark-color'>Physical</div></Link>
-                <Link to='goals/Spiritual'><div className='button dark-color'>Spritual</div></Link>
-                <Link to='goals/Financial'><div className='button dark-color'>Financial</div></Link> */}
+                <setion className='landing-info'>
+                    <h1>Life Tree Balance</h1>
+                    <p>Life tree balance mission is to help individuals create a balanced, healthy, lifestyle by providing a tool to create and track SMART goals. Through these smart goals, you can plan a life that is fulfilling and growth driven.</p><br />
+                    <p>At Life Tree Balance, we believe that the healthiest and happiest lifestyles are those which include every aspect of the human experience. We have provided the basic categories in which to create these goals.</p>
+                </setion>
             </div>
         </div>
     )

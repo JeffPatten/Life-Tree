@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const axios = require('axios');
 const session = require('express-session');
 const controller = require('./controller');
-const nodemailer = require('nodemailer');
 require('dotenv').config();
 
 const app = express();
@@ -43,12 +42,7 @@ app.use(session({
 //     }
 // });
 
-// const mailOptions = {
-//     from: 'treelifebalance@gmail.com',
-//     to: ,
-//     subject: ,
-//     text:
-// }
+
 
 
 
@@ -67,17 +61,13 @@ let authBypass = async (req, res, next) => {
 }
 app.use(authBypass);
 
+
 app.get('/goals/:category', controller.getGoals);
 app.get('/goals/subcategory/:category', controller.getSubcategory);
 app.post('/goals', controller.postGoal);
+app.post('/api/email', controller.sendEmail);
 app.delete('/goals/:goalId', controller.deleteGoal);
-
-// (req, res) => {
-//     const {index} = req.params
-//     favoriteQuotes.splice(index, 1)
-//     res.status(200).send(favoriteQuotes)
-// }
-
+app.put('/goals', controller.editGoals)
 
 
 app.get('/auth/callback', async (req, res) => {

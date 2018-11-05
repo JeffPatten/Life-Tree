@@ -20,7 +20,8 @@ export default class AddSubcategory extends Component {
             addSubcat: '',
             goal: '',
             category_id: 0,
-            subcategory_id: 0
+            subcategory_id: 0,
+            checked: false
         }
     }
 
@@ -65,15 +66,20 @@ export default class AddSubcategory extends Component {
     }
 
     handlePost = () => {
-        var {goal, subcategory_id, category_id} = this.state;
+        var {goal, subcategory_id, category_id, checked} = this.state;
         axios.post('/goals', {goal, subcategory_id, category_id})
         .then( () => {
             alert('Goal Added');
             this.setState({goal: ''});
             this.props.history.push('/home');
         })
-    }
-
+        if(checked === true){
+        axios.post('/api/email', {goal})
+        .catch(err => {
+            console.log(err)
+        })}
+     }
+    
     render() {
 
         return (
@@ -83,7 +89,8 @@ export default class AddSubcategory extends Component {
                     <CategoryDropdown category='Select Category' list={this.state.category} resetThenSet={this.resetThenSet} getSubcategories={this.getSubcategories} />
                     <SubcategoryDropdown category='Select Subcategory' list={this.state.subcategory} resetThenSet={this.resetThenSet} />
                     <textarea placeholder='Add goal - Limit 200 characters' value={this.state.goal} ref='goalInput' className='goalInput'
-                        onChange={(e) => this.setState({ goal: e.target.value })} cols={55} rows={10} maxLength={200}/>
+                        onChange={(e) => this.setState({ goal: e.target.value })} cols={55} rows={10} maxLength={200}/><br/>
+                        <input type='checkbox' name='email' value='email' onChange={(e) => this.setState({checked: e.target.checked})}/>Email Goal<br/>
                     <button onClick={this.handlePost}>Submit</button>
                 </div>
             </div >

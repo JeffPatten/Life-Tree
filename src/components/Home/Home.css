@@ -4,7 +4,7 @@
     background-position: center;
     background-size: cover;
     height: 100vh;
-    width: 100%;
+    width: 100vw;
     padding: 0.1px;
     margin: 0;
 }
@@ -20,4 +20,10 @@
 .dark-color {
     color: darkslategrey;
     border-color: slategrey;
+}
+
+.landing-info {
+    font-family: 'Permanent Marker', cursive; 
+    text-align: center;
+    background-color:'rgba(42, 71, 88, 0.521'
 }

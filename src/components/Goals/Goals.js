@@ -39,6 +39,13 @@ export default class Goals extends Component {
             .then( () => this.getGoals() )
     }
 
+    handleEdit = (goalId, goal) => {
+        axios.put(`/goals`, {goalId, goal})
+        .then( () => {
+            this.getGoals();
+        })    
+    }
+
     renderGoals = () => {
         let subCat = [];
         this.state.goals.map((goals) => {
@@ -58,7 +65,7 @@ export default class Goals extends Component {
                         }).map(goal => {
                             // console.log('LOOK HERE:', goal)
                             return (
-                                <GoalsDisplay goal={goal.goal} goalId={goal.id} handleDelete={this.handleDelete} />
+                                <GoalsDisplay goal={goal.goal} goalId={goal.id} handleDelete={this.handleDelete} handleEdit={this.handleEdit} />
                             )
                         })
                     }
