@@ -13,7 +13,7 @@ export default class Nav extends Component {
                 <Link to='/goals/Spiritual'><button>Spiritual</button></Link>
                 <Link to='/goals/Financial'><button>Financial</button></Link>
                 {/* <Link to='/calendar'><button>Calendar</button></Link> */}
-                <Link to='/smart'><button>Smart Goals</button></Link>
+                {/* <Link to='/smart'><button>Smart Goals</button></Link> */}
                 <Link to='/'><button>Logout</button></Link>
             </div>
         )

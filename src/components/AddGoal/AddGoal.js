@@ -4,7 +4,6 @@ import SubcategoryDropdown from './SubcategoryDropdown';
 import Nav from '../Nav/Nav';
 import axios from 'axios';
 
-
 export default class AddSubcategory extends Component {
     constructor() {
         super();
@@ -85,7 +84,7 @@ export default class AddSubcategory extends Component {
         return (
             <div>
                 <Nav />
-                <div>
+                <div className="dropdowns">
                     <CategoryDropdown category='Select Category' list={this.state.category} resetThenSet={this.resetThenSet} getSubcategories={this.getSubcategories} />
                     <SubcategoryDropdown category='Select Subcategory' list={this.state.subcategory} resetThenSet={this.resetThenSet} />
                     <textarea placeholder='Add goal - Limit 200 characters' value={this.state.goal} ref='goalInput' className='goalInput'
